@@ -34,7 +34,10 @@ internal class Storage: Subscriber {
     }
     
     func write<T: Codable>(_ key: Storage.Constants, value: T?) {
-        syncQueue.sync {
+        syncQueue.async { [weak self] in
+            guard let self else {
+                return
+            }
             switch key {
             case .events:
                 if let event = value as? RawEvent {
