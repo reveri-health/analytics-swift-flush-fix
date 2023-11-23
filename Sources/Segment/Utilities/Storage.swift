@@ -15,7 +15,7 @@ internal class Storage: Subscriber {
 
     // This queue synchronizes reads/writes.
     // Do NOT use it outside of: write, read, reset, remove.
-    let syncQueue = DispatchQueue(label: "sync.segment.com")
+    let syncQueue = DispatchQueue(label: "sync.segment.com", qos: .utility)
 
     private var outputStream: OutputFileStream? = nil
     
@@ -34,7 +34,7 @@ internal class Storage: Subscriber {
     }
     
     func write<T: Codable>(_ key: Storage.Constants, value: T?) {
-        syncQueue.async { [weak self] in
+        syncQueue.sync { [weak self] in
             guard let self else {
                 return
             }
