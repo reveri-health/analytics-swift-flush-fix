@@ -34,7 +34,7 @@ internal class Storage: Subscriber {
     }
     
     func write<T: Codable>(_ key: Storage.Constants, value: T?) {
-        syncQueue.async { [weak self] in
+        syncQueue.sync { [weak self] in
             guard let self else {
                 return
             }
